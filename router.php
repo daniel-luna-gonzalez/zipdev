@@ -1,4 +1,20 @@
 <?php
+
+/**
+ * Build an object using the request with the below structure:
+ *
+ *      ["controller"]=>
+ *           string(9) "PhoneBook"
+ *           ["action"]=>
+ *           string(5) "index"
+ *           ["requestMethod"]=>
+ *           string(3) "GET"
+ *           ["params"]=>
+ *           ["key" => "value"]
+ *       ]
+ *
+ * Class Router
+ */
 class Router
 {
     static  $uri;
@@ -6,44 +22,64 @@ class Router
     public function __construct()
     {
 
-        var_dump(self::$uri); die(); echo "<pre>";
     }
 
-    static public function parse($url, $request)
+    /**
+     * @param $url
+     * @param $objRrequest
+     * @return object|null
+     */
+    static public function parse($url, $objRrequest)
     {
         try {
-            $url = trim($url);
-            self::$uri = explode("/", parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+            self::$uri = explode("/", parse_url($objRrequest->url, PHP_URL_PATH));
+
+            $request = (object)[];
             $request->controller =self::controllerName();
-            $request->action = self::getAction();
+            $request->action = self::action();
             $request->requestMethod = self::requestMethod();
-            $request->params = self::getParams($request);
+            $request->params = self::params($request);
 
+            return $request;
         } catch(Exception $e) {
+            echo __CLASS__." ".__METHOD__." Exception::".$e->getMessage();
 
+            return null;
         }
 
     }
 
+    /**
+     * @return mixed
+     */
     static function controllerName() {
         return self::$uri[1];
     }
 
+    /**
+     * @return mixed
+     */
     static function requestMethod() {
         return  $_SERVER['REQUEST_METHOD'];
     }
 
-    static function getAction() {
+    /**
+     * @return mixed
+     */
+    static function action() {
         return self::$uri[2];
     }
 
-    static function getParams($request) {
-        $params = [];
+    /**
+     * @param $request
+     * @return array
+     */
+    static function params($request) {
         switch ($request->requestMethod) {
             case 'GET':
                 return $_GET;
             case 'POST':
-                return $_POST;
+                return array_merge($_GET, $_POST);
             case 'PUT':
                 parse_str(file_get_contents("php://input"),$post_vars);
                 $request->params = $post_vars;
