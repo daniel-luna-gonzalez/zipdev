@@ -23,7 +23,10 @@ class DB
 
         if(is_null(self::$bdd)) {
             $config = config("db")[self::$connName];
-            self::$bdd = new PDO("mysql:host=${$config["host"]};dbname=${$config["databaseName"]}", $config["user"], $config["password"]);
+            $host = $config["host"];
+            $dataBaseName = $config["databaseName"];
+            $dsn = "mysql:host=$host;dbname=$dataBaseName";
+            self::$bdd = new PDO($dsn, $config["user"], $config["password"]);
         }
         return self::$bdd;
     }

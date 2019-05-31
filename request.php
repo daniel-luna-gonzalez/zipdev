@@ -1,9 +1,11 @@
 <?php
 class Request
 {
-    public $url;
+    public $url = null;
     public function __construct()
     {
-        $this->url = $_SERVER["REQUEST_URI"];
+        if(isset($_SERVER["REQUEST_URI"]))
+             $this->url = $_SERVER["REQUEST_URI"];
+
     }
 }

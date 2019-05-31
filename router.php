@@ -34,6 +34,9 @@ class Router
         try {
             self::$uri = explode("/", parse_url($objRrequest->url, PHP_URL_PATH));
 
+            if(!self::isRequest())
+                return null;
+
             $request = (object)[];
             $request->controller =self::controllerName();
             $request->action = self::action();
@@ -47,6 +50,10 @@ class Router
             return null;
         }
 
+    }
+
+    static function isRequest() {
+        return (php_sapi_name() == "cli") ? false : true;
     }
 
     /**
@@ -79,7 +86,7 @@ class Router
             case 'GET':
                 return $_GET;
             case 'POST':
-                return array_merge($_GET, $_POST);
+                return self::getParamsFromRequestMethod();
             case 'PUT':
                 parse_str(file_get_contents("php://input"),$post_vars);
                 $request->params = $post_vars;
@@ -87,5 +94,19 @@ class Router
 
              return $request;
         }
+    }
+
+    static function getParamsFromRequestMethod() {
+        $params = array_merge($_GET, $_POST);
+
+        $input = file_get_contents('php://input');
+        $json = json_decode($input, true);
+
+        if(is_array($json))
+            return array_merge($params, $json);
+
+        else
+            return $params;
+
     }
 }

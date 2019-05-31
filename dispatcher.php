@@ -7,7 +7,11 @@ class Dispatcher
     {
         try {
             $this->request = new Request();
+            if(is_null($this->request->url))
+                return;
+
             $this->request = Router::parse($this->request->url, $this->request);
+
             $controller = $this->loadController();
             $result = call_user_func_array([$controller, $this->request->action], [$this->request]);
             return $result;

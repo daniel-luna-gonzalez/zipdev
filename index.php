@@ -1,22 +1,27 @@
 <?php
-define('BASE_PATH', getcwd());
-define('APP_PATH', BASE_PATH.'/app/');
+init();
+
+function init() {
+    define('BASE_PATH', getcwd());
+    define('APP_PATH', BASE_PATH.'/app/');
+
 
 //class directories to load
-$directories = array(
-    APP_PATH.'System/',
-    APP_PATH.'Models/'
-);
+    $directories = array(
+        APP_PATH.'System/',
+        APP_PATH.'Models/',
+        APP_PATH.'trait/'
+    );
 
-__autoload($directories);
+    __autoload($directories);
 
+    require(APP_PATH . 'helpers/Helper.php');
+    require(APP_PATH . 'config/db.php');
+    require(BASE_PATH . '/router.php');
+    require(BASE_PATH . '/request.php');
+    require(BASE_PATH . '/dispatcher.php');
 
-require(APP_PATH . 'helpers/Helper.php');
-require(APP_PATH . 'config/db.php');
-require(BASE_PATH . '/router.php');
-require(BASE_PATH . '/request.php');
-require(BASE_PATH . '/dispatcher.php');
-
+}
 
 function __autoload($directories){
 

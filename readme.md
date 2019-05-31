@@ -11,7 +11,7 @@
 
 at root level execute the below command
 
-php app/command/installCommand
+sudo php command.php install
 
 
 ##All entries
@@ -67,6 +67,41 @@ GET
 }
 ```
 ]
+
+##Insert
+
+URL: http://IP_SERVER/PhoneBook/insert
+
+####contentType (request)
+ 
+application/json
+
+
+####Params
+
+Send params as a json in the request body
+```
+{
+	"names": "Daniel",
+	"surnames": "Luna González",
+	"phones": [3143123, 4213124, 41231],
+	"emails": ["danielunag@live.com"]
+	
+}
+
+```
+
+####dataType (response)
+
+application/json
+
+####Response
+```
+{
+    "status": true/false,
+    "message": "output message"
+}
+```
 
 ## Author
 
